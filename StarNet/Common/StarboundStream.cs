@@ -420,9 +420,7 @@ namespace StarNet.Common
 
         public void WriteString(string value)
         {
-            WriteUInt16((ushort)value.Length);
-            if (value.Length > 0)
-                WriteUInt8Array(StringEncoding.GetBytes(value));
+            WriteUInt8Array(StringEncoding.GetBytes(value));
         }
 
         public Variant ReadVariant()
