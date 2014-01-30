@@ -30,7 +30,6 @@ namespace StarNet.Packets.StarNet
             }
         }
         public abstract MessageFlags Flags { get; }
-        public abstract byte PacketId { get; }
         public abstract void Read(BinaryReader stream);
         public abstract void Write(BinaryWriter stream);
 

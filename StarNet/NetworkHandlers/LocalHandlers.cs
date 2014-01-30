@@ -9,8 +9,8 @@ namespace StarNet
     {
         public static void Register()
         {
-            InterNodeNetwork.RegisterPacketHandler(PingPacket.Id, HandlePing);
-            InterNodeNetwork.RegisterPacketHandler(ShutdownPacket.Id, HandleShutdown);
+            InterNodeNetwork.RegisterPacketHandler(typeof(PingPacket), HandlePing);
+            InterNodeNetwork.RegisterPacketHandler(typeof(ShutdownPacket), HandleShutdown);
         }
 
         public static void HandlePing(StarNetPacket _packet, IPEndPoint source, InterNodeNetwork network)

@@ -6,9 +6,6 @@ namespace StarNet.Packets.StarNet
 {
     public class ConfirmationPacket : StarNetPacket
     {
-        public static readonly byte Id = 0;
-        public override byte PacketId { get { return Id; } }
-
         public ConfirmationPacket()
         {
         }

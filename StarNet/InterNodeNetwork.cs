@@ -18,21 +18,21 @@ namespace StarNet
         public delegate void PacketHandler(StarNetPacket packet, IPEndPoint endPoint, InterNodeNetwork network);
         public delegate void HandleResponse(StarNetPacket response, uint transactionId);
         delegate StarNetPacket CreatePacketInstance();
-        static Dictionary<byte, CreatePacketInstance> PacketFactories;
-        private static Dictionary<byte, PacketHandler> PacketHandlers { get; set; }
+        static Dictionary<string, CreatePacketInstance> PacketFactories;
+        private static Dictionary<string, PacketHandler> PacketHandlers { get; set; }
 
         static InterNodeNetwork()
         {
-            PacketHandlers = new Dictionary<byte, PacketHandler>();
-            PacketFactories = new Dictionary<byte, CreatePacketInstance>();
-            PacketFactories[ConfirmationPacket.Id] = () => new ConfirmationPacket();
-            PacketFactories[PingPacket.Id] = () => new PingPacket();
-            PacketFactories[ShutdownPacket.Id] = () => new ShutdownPacket();
+            PacketHandlers = new Dictionary<string, PacketHandler>();
+            PacketFactories = new Dictionary<string, CreatePacketInstance>();
+            PacketFactories[typeof(ConfirmationPacket).Name] = () => new ConfirmationPacket();
+            PacketFactories[typeof(PingPacket).Name] = () => new PingPacket();
+            PacketFactories[typeof(ShutdownPacket).Name] = () => new ShutdownPacket();
         }
 
-        public static void RegisterPacketHandler(byte id, PacketHandler handler)
+        public static void RegisterPacketHandler(Type type, PacketHandler handler)
         {
-            PacketHandlers[id] = handler;
+            PacketHandlers[type.Name] = handler;
         }
 
         private class PendingResponse
@@ -125,7 +125,7 @@ namespace StarNet
         {
             var memory = new MemoryStream();
             var stream = new BinaryWriter(memory);
-            stream.Write(packet.PacketId);
+            stream.Write(packet.GetType().Name);
             stream.Write((byte)packet.Flags);
             if (packet.AssignTransactionId)
                 packet.Transaction = GetTransactionNumber();
@@ -182,7 +182,7 @@ namespace StarNet
             }
             try
             {
-                var id = stream.ReadByte();
+                var id = stream.ReadString();
                 var flags = (MessageFlags)stream.ReadByte();
                 var transaction = stream.ReadUInt32();
                 var timestamp = new DateTime(stream.ReadInt64(), DateTimeKind.Utc);
@@ -210,7 +210,7 @@ namespace StarNet
                         Console.WriteLine("Warning: Received internode network packet with bad signature from {0}", endPoint);
                     else
                     {
-                        if (id == ConfirmationPacket.Id)
+                        if (id == typeof(ConfirmationPacket).Name)
                             HandleConfirmation(packet);
                         else if (PacketHandlers.ContainsKey(id))
                             PacketHandlers[id](packet, endPoint, this);
