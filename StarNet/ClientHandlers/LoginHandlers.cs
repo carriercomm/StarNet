@@ -16,7 +16,13 @@ namespace StarNet.ClientHandlers
             var packet = (ClientConnectPacket)_packet;
             var guid = new Guid(packet.UUID);
             Console.WriteLine("{0} ({1}) logged in from {2} as {3}", packet.Account, guid, client.Socket.RemoteEndPoint, packet.PlayerName);
+            client.PlayerName = packet.PlayerName;
+            client.Account = packet.Account;
+            client.UUID = guid;
             // TODO: Look up account (or create one if not present), then log in the player and stuff
+            client.PacketQueue.Enqueue(new ConnectionResponsePacket("Server doesn't work yet."));
+            client.FlushPackets();
+            node.DropClient(client);
         }
     }
 }

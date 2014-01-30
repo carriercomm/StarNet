@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Net;
 
-namespace StarNet
+namespace StarNet.Packets.StarNet
 {
     public abstract class StarNetPacket
     {

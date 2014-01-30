@@ -28,6 +28,7 @@ namespace StarNet
         public LocalSettings Settings { get; set; }
         public InterNodeNetwork Network { get; set; }
 
+        private object ClientLock = new object();
         private CryptoProvider CryptoProvider { get; set; }
 
         public StarNetNode(SharedDatabase database, LocalSettings settings, CryptoProvider crypto, IPEndPoint endpoint)
@@ -74,12 +75,35 @@ namespace StarNet
             }
         }
 
+        internal void DropClient(StarboundClient client)
+        {
+            lock (ClientLock)
+            {
+                if (Clients.Contains(client))
+                {
+                    try
+                    {
+                        if (client.Socket.Connected)
+                            client.Socket.Close();
+                    }
+                    catch
+                    {
+                    }
+                    finally
+                    {
+                        Clients.Remove(client);
+                        Console.WriteLine("Dropped client {0}", client.UUID);
+                    }
+                }
+            }
+        }
+
         private void AcceptClient(IAsyncResult result)
         {
             var socket = Listener.EndAcceptSocket(result);
             Console.WriteLine("New connection from {0}", socket.RemoteEndPoint);
             var client = new StarboundClient(socket);
-            Clients.Add(client);
+            lock (ClientLock) Clients.Add(client);
             client.PacketQueue.Enqueue(new ProtocolVersionPacket(ProtocolVersion));
             client.FlushPackets();
             client.Socket.BeginReceive(client.PacketReader.NetworkBuffer, 0, client.PacketReader.NetworkBuffer.Length,
@@ -89,15 +113,24 @@ namespace StarNet
         private void ClientDataReceived(IAsyncResult result)
         {
             var client = (StarboundClient)result.AsyncState;
-            var length = client.Socket.EndReceive(result);
-            var packets = client.PacketReader.UpdateBuffer(length);
-            if (packets != null && packets.Length > 0)
+            try
             {
-                foreach (var packet in packets)
-                    PacketReader.HandlePacket(this, client, packet);
+                var length = client.Socket.EndReceive(result);
+                var packets = client.PacketReader.UpdateBuffer(length);
+                if (packets != null && packets.Length > 0)
+                {
+                    foreach (var packet in packets)
+                        PacketReader.HandlePacket(this, client, packet);
+                }
+                client.Socket.BeginReceive(client.PacketReader.NetworkBuffer, 0, client.PacketReader.NetworkBuffer.Length,
+                    SocketFlags.None, ClientDataReceived, client);
             }
-            client.Socket.BeginReceive(client.PacketReader.NetworkBuffer, 0, client.PacketReader.NetworkBuffer.Length,
-                SocketFlags.None, ClientDataReceived, client);
+            catch
+            {
+                // It's generally bad practice to eat all errors, but we do it here to be safe because errors caused by
+                // untrusted input shouldn't crash the server.
+                DropClient(client);
+            }
         }
     }
 }

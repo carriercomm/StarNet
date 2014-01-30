@@ -21,6 +21,7 @@ namespace StarNet
         public string PlayerName { get; set; }
         public string Species { get; set; }
         public string Account { get; set; }
+        public Guid UUID { get; set; }
 
         public StarboundClient(Socket socket)
         {
