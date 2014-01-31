@@ -11,6 +11,7 @@ namespace StarNet.NetworkHandlers
         public static void Register()
         {
             InterNodeNetwork.RegisterPacketHandler(typeof(AddNewUserPacket), HandleAddNewUser);
+            InterNodeNetwork.RegisterPacketHandler(typeof(DropUserPacket), HandleDropUser);
         }
 
         public static void HandleAddNewUser(StarNetPacket _packet, IPEndPoint source, InterNodeNetwork network)
@@ -37,6 +38,29 @@ namespace StarNet.NetworkHandlers
                         transaction.Commit();
                     }
                     Console.WriteLine("Added user {0} at request of {1}", packet.AccountName, source);
+                }
+            }
+        }
+
+        public static void HandleDropUser(StarNetPacket _packet, IPEndPoint source, InterNodeNetwork network)
+        {
+            var packet = (DropUserPacket)_packet;
+            if (source.Address.Equals(IPAddress.Loopback))
+            {
+                using (var session = network.LocalNode.Database.SessionFactory.OpenSession())
+                {
+                    var user = session.Query<User>().SingleOrDefault(u => u.AccountName == packet.AccountName);
+                    if (user == null)
+                    {
+                        Console.WriteLine("Warning: Attempted to drop account that does not exist.");
+                        return;
+                    }
+                    using (var transaction = session.BeginTransaction())
+                    {
+                        session.Delete(user);
+                        transaction.Commit();
+                    }
+                    Console.WriteLine("Dropped user {0} at request of {1}", packet.AccountName, source);
                 }
             }
         }

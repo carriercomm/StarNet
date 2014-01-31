@@ -181,13 +181,20 @@ namespace StarNet
                 switch (action)
                 {
                     case "add":
-                        var packet = new AddNewUserPacket
+                        var addUserPacket = new AddNewUserPacket
                         {
                             AccountName = args[1],
                             Password = args[2],
                             NetworkAdmin = bool.Parse(args[3])
                         };
-                        SendPacket(packet, endPoint, (s, e) => Console.WriteLine("Done."), () => Console.WriteLine("Timed out."));
+                        SendPacket(addUserPacket, endPoint, (s, e) => Console.WriteLine("Done."), () => Console.WriteLine("Timed out."));
+                        break;
+                    case "drop":
+                        var dropUserPacket = new DropUserPacket
+                        {
+                            AccountName = args[1]
+                        };
+                        SendPacket(dropUserPacket, endPoint, (s, e) => Console.WriteLine("Done."), () => Console.WriteLine("Timed out."));
                         break;
                 }
             }

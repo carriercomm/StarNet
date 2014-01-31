@@ -29,6 +29,7 @@ namespace StarNet
             PacketFactories[typeof(PingPacket).Name] = () => new PingPacket();
             PacketFactories[typeof(ShutdownPacket).Name] = () => new ShutdownPacket();
             PacketFactories[typeof(AddNewUserPacket).Name] = () => new AddNewUserPacket();
+            PacketFactories[typeof(DropUserPacket).Name] = () => new DropUserPacket();
         }
 
         public static void RegisterPacketHandler(Type type, PacketHandler handler)
