@@ -17,7 +17,7 @@ namespace StarNet
         public ConcurrentQueue<IStarboundPacket> PacketQueue { get; set; }
         public StarboundServer CurrentServer { get; set; }
         public PacketReader PacketReader { get; set; }
-        public byte[] Shipworld { get; set; }
+        public byte[] Shipworld { get; set; } // TODO: Save to disk to save on memory usage
         public string PlayerName { get; set; }
         public string Species { get; set; }
         public string Account { get; set; }
