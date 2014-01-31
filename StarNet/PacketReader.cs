@@ -19,6 +19,8 @@ namespace StarNet
         {
             PacketFactories = new Dictionary<byte, CreatePacketInstance>();
             PacketFactories[ClientConnectPacket.Id] = () => new ClientConnectPacket();
+            PacketFactories[HandshakeChallengePacket.Id] = () => new HandshakeChallengePacket();
+            PacketFactories[HandshakeResponsePacket.Id] = () => new HandshakeResponsePacket();
 
             PacketHandlers = new Dictionary<byte, PacketHandler>();
         }

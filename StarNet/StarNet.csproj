@@ -105,6 +105,7 @@
     <Compile Include="NetworkHandlers\UserHandlers.cs" />
     <Compile Include="Packets\StarNet\AddNewUserPacket.cs" />
     <Compile Include="Packets\StarNet\DropUserPacket.cs" />
+    <Compile Include="Packets\Starbound\HandshakeResponsePacket.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

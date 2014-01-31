@@ -8,6 +8,7 @@ using Ionic.Zlib;
 using StarNet.Packets;
 using StarNet.Common;
 using StarNet.Packets.Starbound;
+using System.Linq;
 
 namespace StarNet
 {
@@ -22,6 +23,8 @@ namespace StarNet
         public string Species { get; set; }
         public string Account { get; set; }
         public Guid UUID { get; set; }
+
+        internal string ExpectedHash { get; set; }
 
         public StarboundClient(Socket socket)
         {

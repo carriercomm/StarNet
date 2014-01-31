@@ -3,6 +3,8 @@ using StarNet.Packets;
 using StarNet.Packets.Starbound;
 using NHibernate.Linq;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace StarNet.ClientHandlers
 {
@@ -11,6 +13,7 @@ namespace StarNet.ClientHandlers
         public static void Register()
         {
             PacketReader.RegisterPacketHandler(ClientConnectPacket.Id, HandleClientConnect);
+            PacketReader.RegisterPacketHandler(HandshakeResponsePacket.Id, HandleHandshakeResponse);
         }
 
         public static void HandleClientConnect(StarNetNode node, StarboundClient client, IStarboundPacket _packet)
@@ -39,11 +42,38 @@ namespace StarNet.ClientHandlers
                     node.DropClient(client);
                     return;
                 }
-                // TODO: Move forward in the authentication procedure
-                client.PacketQueue.Enqueue(new ConnectionResponsePacket("Found your account."));
+                var random = RandomNumberGenerator.Create();
+                var rawSalt = new byte[24];
+                random.GetBytes(rawSalt);
+                var salt = Convert.ToBase64String(rawSalt);
+                client.ExpectedHash = GenerateHash(user.AccountName, user.Password, salt, 5000);
+                Console.WriteLine("Expecting {0} from {1}", client.ExpectedHash, client.Socket.RemoteEndPoint);
+                client.PacketQueue.Enqueue(new HandshakeChallengePacket(salt));
                 client.FlushPackets();
-                node.DropClient(client);
             }
+        }
+
+        public static void HandleHandshakeResponse(StarNetNode node, StarboundClient client, IStarboundPacket _packet)
+        {
+            var packet = (HandshakeResponsePacket)_packet;
+            Console.WriteLine("Got response: " + packet.PasswordHash);
+            client.PacketQueue.Enqueue(new ConnectionResponsePacket("Got your response"));
+            client.FlushPackets();
+            node.DropClient(client);
+        }
+
+        private static string GenerateHash(string account, string password, string salt, int rounds)
+        {
+            var hash = Encoding.UTF8.GetBytes(account + salt + password);
+            var sha256 = SHA256.Create();
+            sha256.Initialize();
+            while (rounds > 0)
+            {
+                sha256.TransformBlock(hash, 0, hash.Length, null, 0);
+                rounds--;
+            }
+            sha256.TransformFinalBlock(hash, 0, 0);
+            return Convert.ToBase64String(sha256.Hash);
         }
     }
 }

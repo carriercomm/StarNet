@@ -122,7 +122,10 @@ namespace StarNet
                 if (packets != null && packets.Length > 0)
                 {
                     foreach (var packet in packets)
+                    {
+                        Console.WriteLine("Got {0}, handling", packet.GetType().Name);
                         PacketReader.HandlePacket(this, client, packet);
+                    }
                 }
                 client.Socket.BeginReceive(client.PacketReader.NetworkBuffer, 0, client.PacketReader.NetworkBuffer.Length,
                     SocketFlags.None, ClientDataReceived, client);
