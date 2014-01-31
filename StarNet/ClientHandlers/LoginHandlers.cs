@@ -39,11 +39,7 @@ namespace StarNet.ClientHandlers
                     node.DropClient(client);
                     return;
                 }
-                var character = user.Characters.SingleOrDefault(c => c.UUID == client.UUID);
-                if (character == null)
-                {
-                    // TODO: Create a new character for this user
-                }
+                // TODO: Move forward in the authentication procedure
                 client.PacketQueue.Enqueue(new ConnectionResponsePacket("Found your account."));
                 client.FlushPackets();
                 node.DropClient(client);

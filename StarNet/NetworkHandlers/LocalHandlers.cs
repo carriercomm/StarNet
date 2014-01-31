@@ -3,9 +3,9 @@ using System.IO;
 using System.Net;
 using StarNet.Packets.StarNet;
 
-namespace StarNet
+namespace StarNet.NetworkHandlers
 {
-    public static class LocalHandlers
+    internal static class LocalHandlers
     {
         public static void Register()
         {

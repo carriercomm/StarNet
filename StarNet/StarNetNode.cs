@@ -11,6 +11,7 @@ using System.Text;
 using System.IO;
 using StarNet.Packets.Starbound;
 using System.Diagnostics;
+using StarNet.NetworkHandlers;
 
 namespace StarNet
 {
@@ -46,6 +47,7 @@ namespace StarNet
         {
             LoginHandlers.Register();
             LocalHandlers.Register();
+            UserHandlers.Register();
         }
 
         public void Start()

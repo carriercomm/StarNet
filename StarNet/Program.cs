@@ -116,11 +116,18 @@ namespace StarNet
                     case "shutdown":
                         Shutdown(settings);
                         break;
+                    case "user":
+                        HandleUserCommand(args.Skip(1).ToArray(), settings);
+                        break;
                 }
             }
             catch (IndexOutOfRangeException)
             {
                 Console.WriteLine("Error: not enough parameters for {0}", action);
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Invalid arguments.");
             }
         }
 
@@ -163,6 +170,31 @@ namespace StarNet
             var endPoint = new IPEndPoint(IPAddress.Loopback, settings.NetworkPort);
             Console.WriteLine("Instructing {0} to shut down.", endPoint);
             SendPacket(packet, endPoint, null, null);
+        }
+
+        static void HandleUserCommand(string[] args, LocalSettings settings)
+        {
+            var action = args[0];
+            var endPoint = new IPEndPoint(IPAddress.Loopback, settings.NetworkPort);
+            try
+            {
+                switch (action)
+                {
+                    case "add":
+                        var packet = new AddNewUserPacket
+                        {
+                            AccountName = args[1],
+                            Password = args[2],
+                            NetworkAdmin = bool.Parse(args[3])
+                        };
+                        SendPacket(packet, endPoint, (s, e) => Console.WriteLine("Done."), () => Console.WriteLine("Timed out."));
+                        break;
+                }
+            }
+            catch (IndexOutOfRangeException)
+            {
+                Console.WriteLine("Error: not enough parameters for {0}", action);
+            }
         }
     }
 }

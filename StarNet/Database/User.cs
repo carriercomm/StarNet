@@ -11,6 +11,7 @@ namespace StarNet
         /// Kept in plain text for now, will eventually just use the official system Chucklefish is working on.
         /// </summary>
         public virtual string Password { get; set; }
+        public virtual bool NetworkAdmin { get; set; }
         public virtual IList<Character> Characters { get; set; }
     }
 }

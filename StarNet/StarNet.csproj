@@ -102,6 +102,8 @@
     <Compile Include="Packets\StarNet\ShutdownPacket.cs" />
     <Compile Include="Packets\StarNet\IdentificationRequestPacket.cs" />
     <Compile Include="Packets\Starbound\ConnectionResponsePacket.cs" />
+    <Compile Include="NetworkHandlers\UserHandlers.cs" />
+    <Compile Include="Packets\StarNet\AddNewUserPacket.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
