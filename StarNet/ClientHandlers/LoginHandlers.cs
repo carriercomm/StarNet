@@ -62,18 +62,20 @@ namespace StarNet.ClientHandlers
             node.DropClient(client);
         }
 
-        private static string GenerateHash(string account, string password, string salt, int rounds)
+        private static string GenerateHash(string account, string password, string challenge, int rounds)
         {
-            var hash = Encoding.UTF8.GetBytes(account + salt + password);
+            var salt = Encoding.UTF8.GetBytes(account + challenge);
             var sha256 = SHA256.Create();
-            sha256.Initialize();
+            byte[] hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
             while (rounds > 0)
             {
+                sha256.Initialize();
                 sha256.TransformBlock(hash, 0, hash.Length, null, 0);
+                sha256.TransformFinalBlock(salt, 0, salt.Length);
+                hash = sha256.Hash;
                 rounds--;
             }
-            sha256.TransformFinalBlock(hash, 0, 0);
-            return Convert.ToBase64String(sha256.Hash);
+            return Convert.ToBase64String(hash);
         }
     }
 }
