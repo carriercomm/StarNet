@@ -50,7 +50,6 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\lib\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data" />
     <Reference Include="Npgsql">
       <HintPath>..\lib\Npgsql.dll</HintPath>
     </Reference>
