@@ -124,7 +124,6 @@ namespace StarNet
                 // It's generally bad practice to eat all errors, but we do it here to be safe because errors caused by
                 // untrusted input shouldn't crash the server.
                 DropClient(client);
-                throw;
             }
         }
     }
