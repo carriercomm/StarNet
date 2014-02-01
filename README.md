@@ -35,7 +35,7 @@ your network to use. Once you have a database prepared, your node needs an RSA k
     $ openssl rsa -pubout -in node.key -out node.key.pub
 
 This will generate your server's key in node.key, and the public key in node.key.pub. Keep the node.key
-file secret. See [key compromise]https://github.com/SirCmpwn/StarNet/wiki/Key-Compromise() on the wiki
+file secret. See [key compromise](https://github.com/SirCmpwn/StarNet/wiki/Key-Compromise) on the wiki
 for help if it's lost. Next step:
 
     $ mono StarNet.exe
