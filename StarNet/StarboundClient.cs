@@ -54,8 +54,10 @@ namespace StarNet
                 header[0] = next.PacketId;
                 int discarded;
                 StarboundStream.WriteSignedVLQ(header, 1, length, out discarded);
+                int payloadStart = header.Length;
+                Array.Resize(ref header, header.Length + buffer.Length);
+                Array.Copy(buffer, 0, header, payloadStart, buffer.Length);
                 Socket.Send(header);
-                Socket.Send(buffer);
             }
         }
     }

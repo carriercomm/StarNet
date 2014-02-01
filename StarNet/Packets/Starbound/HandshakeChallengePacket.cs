@@ -8,9 +8,9 @@ namespace StarNet.Packets.Starbound
         public static readonly byte Id = 3;
         public byte PacketId { get { return Id; } }
 
-        public string ClaimMessage { get; set; }
-        public string Salt { get; set; }
-        public int Rounds { get; set; }
+        public string ClaimMessage;
+        public string Salt;
+        public int Rounds;
 
         public HandshakeChallengePacket()
         {

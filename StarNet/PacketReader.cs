@@ -63,6 +63,8 @@ namespace StarNet
                 if (PacketBuffer.Length < index + length)
                     Array.Resize(ref PacketBuffer, index + length);
                 Array.Copy(NetworkBuffer, 0, PacketBuffer, index, length);
+                if (length == 48)
+                    Console.WriteLine("foobar");
                 if (PacketBuffer.Length > 1)
                 {
                     // Check to see if we have the entire length yet
@@ -85,7 +87,7 @@ namespace StarNet
                         throw new IOException("Packet exceeded maximum permissible length.");
                 }
             }
-            else
+            if (WorkingLength != long.MaxValue) // This could be an else, but the earlier block can change the state and this needs to happen if it does
             {
                 if (PacketBuffer.Length < index + length)
                     Array.Resize(ref PacketBuffer, index + length);

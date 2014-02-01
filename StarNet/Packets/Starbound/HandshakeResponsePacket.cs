@@ -8,8 +8,8 @@ namespace StarNet.Packets.Starbound
         public static readonly byte Id = 8;
         public byte PacketId { get { return Id; } }
 
-        public string ClaimMessage { get; set; }
-        public string PasswordHash { get; set; }
+        public string ClaimMessage;
+        public string PasswordHash;
 
         public HandshakeResponsePacket()
         {
