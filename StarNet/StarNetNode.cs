@@ -62,7 +62,7 @@ namespace StarNet
             Network.Start();
             Listener.Start();
             Listener.BeginAcceptSocket(AcceptClient, null);
-            HeartbeatTimer.Change(200, 200);
+            HeartbeatTimer.Change(HeartbeatInterval, HeartbeatInterval);
             Console.WriteLine("Starbound: Listening on " + Listener.LocalEndpoint);
         }
 

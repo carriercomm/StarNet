@@ -72,7 +72,8 @@ namespace StarNet
             while (PacketQueue.Count > 0)
             {
                 IStarboundPacket next;
-                while (!PacketQueue.TryDequeue(out next)) ;
+                while (!PacketQueue.TryDequeue(out next))
+                    ;
                 var memoryStream = new MemoryStream();
                 var stream = new StarboundStream(memoryStream);
                 next.Write(stream);
@@ -92,7 +93,8 @@ namespace StarNet
                 int payloadStart = header.Length;
                 Array.Resize(ref header, header.Length + buffer.Length);
                 Array.Copy(buffer, 0, header, payloadStart, buffer.Length);
-                lock (PacketsWaitingLock) PacketsWaiting++;
+                lock (PacketsWaitingLock)
+                    PacketsWaiting++;
                 EmptyQueueReset.Reset();
                 Socket.BeginSend(header, 0, header.Length, SocketFlags.None, r =>
                 {

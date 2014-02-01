@@ -66,7 +66,6 @@ namespace StarNet.ClientHandlers
             client.PacketQueue.Enqueue(new ConnectionResponsePacket(client.ClientId));
             client.FlushPackets();
             client.SendHeartbeats = true;
-            //node.DropClient(client);
         }
 
         private static string GenerateHash(string account, string password, string challenge, int rounds)
