@@ -57,7 +57,7 @@ namespace StarNet
                 int payloadStart = header.Length;
                 Array.Resize(ref header, header.Length + buffer.Length);
                 Array.Copy(buffer, 0, header, payloadStart, buffer.Length);
-                Socket.Send(header);
+                Socket.BeginSend(header, 0, header.Length, SocketFlags.None, null, null);
             }
         }
     }
