@@ -17,7 +17,7 @@ to find their servers and play on them. This also helps the StarNet network grow
 Each server would ideally host a star system or two, and StarNet would handle transparently moving
 players between servers when they warp around.
 
-## Compiling
+## Installation
 
 StarNet nodes are only designed to run on Linux, but you may have success with other platforms. On Linux,
 make sure you have Mono 3.2.3 installed. **Debian stable has the wrong version of Mono**. The official
