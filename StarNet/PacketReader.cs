@@ -55,7 +55,7 @@ namespace StarNet
         public IStarboundPacket[] UpdateBuffer(int length)
         {
             if (length == 0)
-                return null; // TODO: This is probably a network error, handle it appropriately
+                throw new IOException("Client sent no data, connection is likely terminated.");
             int index = PacketBuffer.Length;
             if (WorkingLength == long.MaxValue)
             {

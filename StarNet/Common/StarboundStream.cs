@@ -193,7 +193,6 @@ namespace StarNet.Common
                 n -= Read(result, length - n, n);
                 if (n == 0)
                     break;
-                System.Threading.Thread.Sleep(1);
             }
             return result;
         }
