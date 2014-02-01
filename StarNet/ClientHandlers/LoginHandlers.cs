@@ -56,8 +56,14 @@ namespace StarNet.ClientHandlers
         public static void HandleHandshakeResponse(StarNetNode node, StarboundClient client, IStarboundPacket _packet)
         {
             var packet = (HandshakeResponsePacket)_packet;
-            Console.WriteLine("Got response: " + packet.PasswordHash);
-            client.PacketQueue.Enqueue(new ConnectionResponsePacket("Got your response"));
+            if (packet.PasswordHash != client.ExpectedHash)
+            {
+                client.PacketQueue.Enqueue(new ConnectionResponsePacket("Incorrect login, please try again."));
+                client.FlushPackets();
+                node.DropClient(client);
+                return;
+            }
+            client.PacketQueue.Enqueue(new ConnectionResponsePacket("Login success, but we haven't implemented anything past here."));
             client.FlushPackets();
             node.DropClient(client);
         }

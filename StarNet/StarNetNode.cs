@@ -12,6 +12,7 @@ using System.IO;
 using StarNet.Packets.Starbound;
 using System.Diagnostics;
 using StarNet.NetworkHandlers;
+using System.Threading.Tasks;
 
 namespace StarNet
 {
@@ -81,22 +82,9 @@ namespace StarNet
         {
             lock (ClientLock)
             {
-                if (Clients.Contains(client))
-                {
-                    try
-                    {
-                        if (client.Socket.Connected)
-                            client.Socket.Close();
-                    }
-                    catch
-                    {
-                    }
-                    finally
-                    {
-                        Clients.Remove(client);
-                        Console.WriteLine("Dropped client {0}", client.UUID);
-                    }
-                }
+                client.DropAsync();
+                Clients.Remove(client);
+                Console.WriteLine("Dropped client {0}", client.UUID);
             }
         }
 
@@ -125,14 +113,18 @@ namespace StarNet
                     foreach (var packet in packets)
                         PacketReader.HandlePacket(this, client, packet);
                 }
-                client.Socket.BeginReceive(client.PacketReader.NetworkBuffer, 0, client.PacketReader.NetworkBuffer.Length,
-                    SocketFlags.None, ClientDataReceived, client);
+                if (!client.Dropped)
+                {
+                    client.Socket.BeginReceive(client.PacketReader.NetworkBuffer, 0, client.PacketReader.NetworkBuffer.Length,
+                        SocketFlags.None, ClientDataReceived, client);
+                }
             }
             catch
             {
                 // It's generally bad practice to eat all errors, but we do it here to be safe because errors caused by
                 // untrusted input shouldn't crash the server.
                 DropClient(client);
+                throw;
             }
         }
     }
