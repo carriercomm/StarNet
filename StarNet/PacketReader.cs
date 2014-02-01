@@ -118,7 +118,7 @@ namespace StarNet
                 if (PacketFactories.ContainsKey(packetId))
                     packet = PacketFactories[packetId]();
                 else
-                    packet = new UnhandledPacket(Compressed, payload.Length, packetId);
+                    packet = new UnhandledPacket(payload, packetId);
                 packet.Read(stream);
                 packets.Add(packet);
             }

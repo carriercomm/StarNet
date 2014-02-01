@@ -47,7 +47,6 @@ namespace StarNet.ClientHandlers
                 random.GetBytes(rawSalt);
                 var salt = Convert.ToBase64String(rawSalt);
                 client.ExpectedHash = GenerateHash(user.AccountName, user.Password, salt, 5000);
-                Console.WriteLine("Expecting {0} from {1}", client.ExpectedHash, client.Socket.RemoteEndPoint);
                 client.PacketQueue.Enqueue(new HandshakeChallengePacket(salt));
                 client.FlushPackets();
             }

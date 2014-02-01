@@ -21,10 +21,9 @@ namespace StarNet.Packets.Starbound
             ProtocolVersion = stream.ReadUInt32();
         }
 
-        public bool Write(StarboundStream stream)
+        public void Write(StarboundStream stream)
         {
             stream.WriteUInt32(ProtocolVersion);
-            return false;
         }
     }
 }

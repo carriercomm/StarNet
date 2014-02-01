@@ -30,12 +30,11 @@ namespace StarNet.Packets.Starbound
             Rounds = stream.ReadInt32();
         }
 
-        public bool Write(StarboundStream stream)
+        public void Write(StarboundStream stream)
         {
             stream.WriteString(ClaimMessage);
             stream.WriteString(Salt);
             stream.WriteInt32(Rounds);
-            return false;
         }
     }
 }

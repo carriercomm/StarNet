@@ -45,9 +45,17 @@ namespace StarNet.Packets.Starbound
             Account = stream.ReadString();
         }
 
-        public bool Write(StarboundStream stream)
+        public void Write(StarboundStream stream)
         {
-            throw new NotImplementedException();
+            stream.WriteString(AssetDigest);
+            stream.WriteVariant(Claim);
+            stream.WriteBoolean(UUID != null);
+            if (UUID != null)
+                stream.WriteUInt8Array(UUID, false);
+            stream.WriteString(PlayerName);
+            stream.WriteString(Species);
+            stream.WriteUInt8Array(Shipworld);
+            stream.WriteString(Account);
         }
     }
 }

@@ -71,13 +71,14 @@ namespace StarNet
                 while (!PacketQueue.TryDequeue(out next)) ;
                 var memoryStream = new MemoryStream();
                 var stream = new StarboundStream(memoryStream);
-                var compressed = next.Write(stream);
+                next.Write(stream);
                 byte[] buffer = new byte[stream.Position];
                 Array.Copy(memoryStream.GetBuffer(), buffer, buffer.Length);
                 int length = buffer.Length;
-                if (compressed)
+                var compressed = ZlibStream.CompressBuffer(buffer);
+                if (compressed.Length < buffer.Length)
                 {
-                    buffer = ZlibStream.CompressBuffer(buffer);
+                    buffer = compressed;
                     length = -buffer.Length;
                 }
                 byte[] header = new byte[StarboundStream.GetSignedVLQLength(length) + 1];

@@ -14,6 +14,6 @@ namespace StarNet.Packets.Starbound
         /// </summary>
         /// <param name="stream">The stream to write to.</param>
         /// <returns>True if the payload should be compressed.</returns>
-        bool Write(StarboundStream stream);
+        void Write(StarboundStream stream);
     }
 }

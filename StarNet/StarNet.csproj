@@ -91,7 +91,6 @@
     <Compile Include="Packets\Starbound\ClientConnectPacket.cs" />
     <Compile Include="Packets\Starbound\HandshakeChallengePacket.cs" />
     <Compile Include="Packets\Starbound\ProtocolVersionPacket.cs" />
-    <Compile Include="Packets\Starbound\ServerDisconnectPacket.cs" />
     <Compile Include="Packets\Starbound\UnhandledPacket.cs" />
     <Compile Include="Packets\Starbound\IStarboundPacket.cs" />
     <Compile Include="InterNodeNetwork.cs" />

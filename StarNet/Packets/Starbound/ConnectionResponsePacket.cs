@@ -38,12 +38,11 @@ namespace StarNet.Packets.Starbound
             RejectionReason = stream.ReadString();
         }
 
-        public bool Write(StarboundStream stream)
+        public void Write(StarboundStream stream)
         {
             stream.WriteBoolean(Success);
             stream.WriteVLQ(ClientId);
             stream.WriteString(RejectionReason);
-            return false;
         }
     }
 }

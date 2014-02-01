@@ -27,11 +27,10 @@ namespace StarNet.Packets.Starbound
             PasswordHash = stream.ReadString();
         }
 
-        public bool Write(StarboundStream stream)
+        public void Write(StarboundStream stream)
         {
             stream.WriteString(ClaimMessage);
             stream.WriteString(PasswordHash);
-            return false;
         }
     }
 }
