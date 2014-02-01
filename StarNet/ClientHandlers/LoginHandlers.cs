@@ -63,7 +63,8 @@ namespace StarNet.ClientHandlers
                 node.DropClient(client);
                 return;
             }
-            client.PacketQueue.Enqueue(new ConnectionResponsePacket("Login success, but we haven't implemented anything past here."));
+            client.ClientId = node.AllocateClientId();
+            client.PacketQueue.Enqueue(new ConnectionResponsePacket(client.ClientId));
             client.FlushPackets();
             node.DropClient(client);
         }

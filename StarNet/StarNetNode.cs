@@ -32,6 +32,7 @@ namespace StarNet
 
         private object ClientLock = new object();
         private CryptoProvider CryptoProvider { get; set; }
+        private uint NextClientId { get; set; }
 
         public StarNetNode(SharedDatabase database, LocalSettings settings, CryptoProvider crypto, IPEndPoint endpoint)
         {
@@ -42,6 +43,7 @@ namespace StarNet
             CryptoProvider = crypto;
             Network = new InterNodeNetwork(this, crypto);
             RegisterHandlers();
+            NextClientId = 0;
         }
 
         private void RegisterHandlers()
@@ -86,6 +88,11 @@ namespace StarNet
                 Clients.Remove(client);
                 Console.WriteLine("Dropped client {0}", client.UUID);
             }
+        }
+
+        internal uint AllocateClientId()
+        {
+            return NextClientId++;
         }
 
         private void AcceptClient(IAsyncResult result)

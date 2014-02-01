@@ -25,6 +25,7 @@ namespace StarNet
         public string Species { get; set; }
         public string Account { get; set; }
         public Guid UUID { get; set; }
+        public uint ClientId { get; set; }
 
         internal bool Dropped { get; set; }
         internal string ExpectedHash { get; set; }
