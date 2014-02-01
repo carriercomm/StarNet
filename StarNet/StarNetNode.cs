@@ -103,6 +103,7 @@ namespace StarNet
         private void AcceptClient(IAsyncResult result)
         {
             var socket = Listener.EndAcceptSocket(result);
+            Listener.BeginAcceptSocket(AcceptClient, null);
             Console.WriteLine("New connection from {0}", socket.RemoteEndPoint);
             var client = new StarboundClient(socket);
             lock (ClientLock) Clients.Add(client);
