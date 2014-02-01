@@ -31,7 +31,6 @@ StarNet runs on Arch Linux. Anywho, get Mono and run this:
 Congrats, your binaries are in the working directory. You'll need to prepare a PostgreSQL database for
 your network to use. Once you have a database prepared, your node needs an RSA keypair. Do this:
 
-    $ cd StarNet/bin/Debug
     $ openssl genrsa -out node.key
     $ openssl rsa -pubout -in node.key -out node.key.pub
 
