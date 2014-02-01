@@ -65,7 +65,8 @@ namespace StarNet.ClientHandlers
             client.ClientId = node.AllocateClientId();
             client.PacketQueue.Enqueue(new ConnectionResponsePacket(client.ClientId));
             client.FlushPackets();
-            node.DropClient(client);
+            client.SendHeartbeats = true;
+            //node.DropClient(client);
         }
 
         private static string GenerateHash(string account, string password, string challenge, int rounds)

@@ -13,13 +13,15 @@ using StarNet.Packets.Starbound;
 using System.Diagnostics;
 using StarNet.NetworkHandlers;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace StarNet
 {
     public class StarNetNode
     {
-        public const int ClientBufferLength = 1024;
         public const int ProtocolVersion = 636;
+
+        private const int HeartbeatInterval = 200;
 
         public delegate void HandleNetworkMessage(BinaryReader stream, IPEndPoint source);
 
@@ -33,6 +35,7 @@ namespace StarNet
         private object ClientLock = new object();
         private CryptoProvider CryptoProvider { get; set; }
         private uint NextClientId { get; set; }
+        private Timer HeartbeatTimer { get; set; }
 
         public StarNetNode(SharedDatabase database, LocalSettings settings, CryptoProvider crypto, IPEndPoint endpoint)
         {
@@ -44,6 +47,7 @@ namespace StarNet
             Network = new InterNodeNetwork(this, crypto);
             RegisterHandlers();
             NextClientId = 0;
+            HeartbeatTimer = new Timer(DoHeartbeats);
         }
 
         private void RegisterHandlers()
@@ -58,6 +62,7 @@ namespace StarNet
             Network.Start();
             Listener.Start();
             Listener.BeginAcceptSocket(AcceptClient, null);
+            HeartbeatTimer.Change(200, 200);
             Console.WriteLine("Starbound: Listening on " + Listener.LocalEndpoint);
         }
 
@@ -93,6 +98,21 @@ namespace StarNet
         internal uint AllocateClientId()
         {
             return NextClientId++;
+        }
+
+        private void DoHeartbeats(object discarded)
+        {
+            lock (ClientLock)
+            {
+                foreach (var client in Clients)
+                {
+                    if (client.SendHeartbeats)
+                    {
+                        client.PacketQueue.Enqueue(new HeartbeatPacket(client.NextHeartbeatId++));
+                        client.FlushPackets();
+                    }
+                }
+            }
         }
 
         private void AcceptClient(IAsyncResult result)

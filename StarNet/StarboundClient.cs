@@ -29,6 +29,8 @@ namespace StarNet
 
         internal bool Dropped { get; set; }
         internal string ExpectedHash { get; set; }
+        internal bool SendHeartbeats { get; set; }
+        internal ulong NextHeartbeatId { get; set; }
 
         private ManualResetEvent EmptyQueueReset { get; set; }
         private int PacketsWaiting = 0;
@@ -40,6 +42,8 @@ namespace StarNet
             PacketQueue = new ConcurrentQueue<IStarboundPacket>();
             PacketReader = new PacketReader();
             Dropped = false;
+            SendHeartbeats = false;
+            NextHeartbeatId = 0;
             EmptyQueueReset = new ManualResetEvent(true);
         }
 

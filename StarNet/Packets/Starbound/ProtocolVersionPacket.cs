@@ -11,6 +11,10 @@ namespace StarNet.Packets.Starbound
 
         public uint ProtocolVersion { get; set; }
 
+        public ProtocolVersionPacket()
+        {
+        }
+
         public ProtocolVersionPacket(uint protocolVersion)
         {
             ProtocolVersion = protocolVersion;
